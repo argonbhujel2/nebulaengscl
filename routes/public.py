@@ -18,12 +18,31 @@ public_bp = Blueprint('public', __name__)
 
 
 def get_settings():
-    return SiteSettings.get_settings()
+    try:
+        return SiteSettings.get_settings()
+    except Exception as e:
+        print(f'get_settings error: {e}')
+        try:
+            from models import db
+            db.session.rollback()
+        except Exception:
+            pass
+        # Minimal fallback so templates never crash
+        return SiteSettings(
+            school_name='Shree Nebula English School',
+            tagline='Inspiring Minds. Building Futures.',
+        )
 
 
 @public_bp.context_processor
 def inject_globals():
-    settings = get_settings()
+    try:
+        settings = get_settings()
+    except Exception:
+        settings = SiteSettings(
+            school_name='Shree Nebula English School',
+            tagline='Inspiring Minds. Building Futures.',
+        )
     return {
         'settings': settings,
         'current_year': datetime.utcnow().year,

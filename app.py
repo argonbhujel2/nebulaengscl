@@ -11,6 +11,84 @@ from models import init_db, db
 from routes import register_blueprints
 
 
+def _bootstrap_defaults(app):
+    """Create tables, default site settings, and default admin if missing."""
+    with app.app_context():
+        try:
+            db.create_all()
+        except Exception as e:
+            print(f'db.create_all warning: {e}')
+
+        # Add missing columns when possible (best-effort)
+        try:
+            from sqlalchemy import text, inspect
+            insp = inspect(db.engine)
+            if 'site_settings' in insp.get_table_names():
+                cols = {c['name'] for c in insp.get_columns('site_settings')}
+                for col, coltype in (
+                    ('hero_image', 'VARCHAR(255)'),
+                    ('about_image', 'VARCHAR(255)'),
+                    ('principal_image', 'VARCHAR(255)'),
+                    ('logo', 'VARCHAR(255)'),
+                    ('favicon', 'VARCHAR(255)'),
+                    ('map_embed', 'TEXT'),
+                ):
+                    if col not in cols:
+                        db.session.execute(text(f'ALTER TABLE site_settings ADD COLUMN {col} {coltype}'))
+                        db.session.commit()
+            if 'news' in insp.get_table_names():
+                cols = {c['name'] for c in insp.get_columns('news')}
+                if 'attachment' not in cols:
+                    db.session.execute(text('ALTER TABLE news ADD COLUMN attachment VARCHAR(255)'))
+                    db.session.commit()
+            if 'events' in insp.get_table_names():
+                cols = {c['name'] for c in insp.get_columns('events')}
+                if 'attachment' not in cols:
+                    db.session.execute(text('ALTER TABLE events ADD COLUMN attachment VARCHAR(255)'))
+                    db.session.commit()
+        except Exception as e:
+            print(f'schema migrate warning: {e}')
+
+        # Default site settings row
+        try:
+            from models.settings import SiteSettings
+            if not SiteSettings.query.first():
+                db.session.add(SiteSettings())
+                db.session.commit()
+                print('Created default SiteSettings')
+        except Exception as e:
+            print(f'settings bootstrap warning: {e}')
+            try:
+                db.session.rollback()
+            except Exception:
+                pass
+
+        # Default admin: admin@nebula / admin123
+        try:
+            from models.admin import AdminUser
+            email = 'admin@nebula'
+            existing = AdminUser.query.filter_by(email=email).first()
+            if not existing:
+                admin = AdminUser(name='Admin', email=email, role='admin', is_active=True)
+                admin.set_password('admin123')
+                db.session.add(admin)
+                db.session.commit()
+                print('Created default admin admin@nebula / admin123')
+            else:
+                # Ensure known password on fresh deploys if env forces reset
+                if os.environ.get('RESET_ADMIN_PASSWORD') == '1':
+                    existing.set_password('admin123')
+                    existing.is_active = True
+                    db.session.commit()
+                    print('Reset admin password to admin123')
+        except Exception as e:
+            print(f'admin bootstrap warning: {e}')
+            try:
+                db.session.rollback()
+            except Exception:
+                pass
+
+
 def create_app(config_class=Config):
     # Explicit absolute paths — required for reliable templates/static on Vercel
     app = Flask(
@@ -39,36 +117,12 @@ def create_app(config_class=Config):
     def media_filter(path):
         """Jinja filter: {{ path|media }} works for local and Cloudinary URLs."""
         from utils.helpers import media_url
-        return media_url(path)
-
-    # Create tables automatically for SQLite / first run
-    with app.app_context():
-        db.create_all()
-        # Add missing columns on existing SQLite DBs (create_all does not alter)
         try:
-            from sqlalchemy import text, inspect
-            insp = inspect(db.engine)
-            if 'site_settings' in insp.get_table_names():
-                cols = {c['name'] for c in insp.get_columns('site_settings')}
-                for col in ('hero_image', 'about_image', 'principal_image', 'logo', 'favicon'):
-                    if col not in cols:
-                        db.session.execute(text(f'ALTER TABLE site_settings ADD COLUMN {col} VARCHAR(255)'))
-                        db.session.commit()
-                if 'map_embed' not in cols:
-                    db.session.execute(text('ALTER TABLE site_settings ADD COLUMN map_embed TEXT'))
-                    db.session.commit()
-            if 'news' in insp.get_table_names():
-                cols = {c['name'] for c in insp.get_columns('news')}
-                if 'attachment' not in cols:
-                    db.session.execute(text('ALTER TABLE news ADD COLUMN attachment VARCHAR(255)'))
-                    db.session.commit()
-            if 'events' in insp.get_table_names():
-                cols = {c['name'] for c in insp.get_columns('events')}
-                if 'attachment' not in cols:
-                    db.session.execute(text('ALTER TABLE events ADD COLUMN attachment VARCHAR(255)'))
-                    db.session.commit()
+            return media_url(path)
         except Exception:
-            pass
+            return path or ''
+
+    _bootstrap_defaults(app)
 
     @app.errorhandler(404)
     def not_found(e):

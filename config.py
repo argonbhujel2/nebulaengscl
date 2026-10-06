@@ -15,6 +15,10 @@ def get_database_url():
         url = url.replace('postgresql+psycopg://', 'postgresql+psycopg2://', 1)
     elif url.startswith('postgresql://'):
         url = url.replace('postgresql://', 'postgresql+psycopg2://', 1)
+    # Neon / many cloud Postgres require SSL
+    if url.startswith('postgresql') and 'sslmode=' not in url:
+        sep = '&' if '?' in url else '?'
+        url = f'{url}{sep}sslmode=require'
     return url
 
 

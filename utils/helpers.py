@@ -96,10 +96,14 @@ def media_url(path):
     """Return URL for a stored path (Cloudinary full URL or local static path)."""
     if not path:
         return ''
+    path = str(path)
     if path.startswith('http://') or path.startswith('https://'):
         return path
-    from flask import url_for
-    return url_for('static', filename=path)
+    try:
+        from flask import url_for
+        return url_for('static', filename=path)
+    except Exception:
+        return f'/static/{path.lstrip("/")}' 
 
 
 def slugify(text):
