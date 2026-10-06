@@ -16,7 +16,8 @@
           "config.py",
           "app.py",
           "wsgi.py",
-          "requirements.txt"
+          "requirements.txt",
+          "seed_data.py"
         ]
       }
     }

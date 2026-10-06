@@ -101,6 +101,21 @@ def _bootstrap_defaults(app):
             except Exception:
                 pass
 
+        # Seed sample content once when tables are empty
+        try:
+            from models.notice import Notice
+            from models.news import News
+            if Notice.query.count() == 0 and News.query.count() == 0:
+                from seed_data import seed_content
+                seed_content()
+                print('Sample content seeded')
+        except Exception as e:
+            print(f'content seed warning: {e}')
+            try:
+                db.session.rollback()
+            except Exception:
+                pass
+
 
 def create_app(config_class=Config):
     app = Flask(
