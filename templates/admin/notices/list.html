@@ -1,0 +1,17 @@
+{% extends "admin/base.html" %}
+{% block title %}Notices{% endblock %}{% block page_title %}Notices{% endblock %}
+{% block content %}
+<div class="admin-card"><div class="card-header"><h2>All Notices</h2><a href="{{ url_for('admin.notices_create') }}" class="btn-admin btn-admin-primary"><i class="fas fa-plus"></i> Create</a></div>
+<div class="card-body">
+<form class="search-bar" method="GET"><input type="text" name="q" value="{{ q }}" placeholder="Search notices..."><button type="submit" class="btn-admin btn-admin-primary">Search</button></form>
+<table class="admin-table"><thead><tr><th>Title</th><th>Category</th><th>Status</th><th>Date</th><th>Actions</th></tr></thead><tbody>
+{% for n in notices %}<tr><td>{{ n.title }}</td><td>{{ n.category }}</td>
+<td><span class="badge badge-{{ 'success' if n.published else 'muted' }}">{{ 'Published' if n.published else 'Draft' }}</span></td>
+<td>{{ n.created_at.strftime('%d %b %Y') }}</td>
+<td><a href="{{ url_for('admin.notices_edit', id=n.id) }}" class="btn-admin btn-admin-sm btn-admin-primary">Edit</a>
+<form method="POST" action="{{ url_for('admin.notices_delete', id=n.id) }}" style="display:inline" data-confirm="Delete this notice?"><button type="submit" class="btn-admin btn-admin-sm btn-admin-danger" data-confirm="Delete this notice?">Delete</button></form></td></tr>
+{% else %}<tr><td colspan="5" style="text-align:center;color:#667085">No notices found</td></tr>{% endfor %}
+</tbody></table>
+{% if pagination and pagination.pages > 1 %}<div style="margin-top:16px;display:flex;gap:8px">{% for p in pagination.iter_pages() %}{% if p %}<a href="?page={{ p }}&q={{ q }}" style="padding:6px 12px;border:1px solid #E4E7EC;border-radius:6px;{{ 'background:#0B1F3A;color:#fff' if p==pagination.page }}">{{ p }}</a>{% endif %}{% endfor %}</div>{% endif %}
+</div></div>
+{% endblock %}

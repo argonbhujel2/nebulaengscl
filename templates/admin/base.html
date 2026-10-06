@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% if site_settings and site_settings.favicon %}<link rel="icon" href="{{ site_settings.favicon|media }}">{% endif %}
+<title>{% block title %}Admin{% endblock %} - {% if site_settings %}{{ site_settings.school_name }}{% else %}Admin{% endif %}</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body class="admin-body">
+<aside class="admin-sidebar">
+<div class="logo">
+{% if site_settings and site_settings.logo %}
+<img src="{{ site_settings.logo|media }}" alt="Logo" style="width:36px;height:36px;object-fit:contain;border-radius:8px;">
+{% else %}
+<div style="width:36px;height:36px;background:linear-gradient(135deg,#2563EB,#F4B400);border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:800;color:#0B1F3A;font-size:1rem">N</div>
+{% endif %}
+<div>{% if site_settings %}{{ site_settings.school_name[:20] }}{% else %}Nebula School{% endif %}<span>Admin Panel</span></div>
+</div>
+<nav class="admin-nav">
+<a href="{{ url_for('admin.dashboard') }}" class="{{ 'active' if request.endpoint == 'admin.dashboard' }}"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+<div class="nav-section">Content</div>
+<a href="{{ url_for('admin.notices_list') }}"><i class="fas fa-bullhorn"></i> Notices</a>
+<a href="{{ url_for('admin.news_list') }}"><i class="fas fa-newspaper"></i> News</a>
+<a href="{{ url_for('admin.events_list') }}"><i class="fas fa-calendar"></i> Events</a>
+<a href="{{ url_for('admin.gallery_list') }}"><i class="fas fa-images"></i> Gallery</a>
+<a href="{{ url_for('admin.facilities_list') }}"><i class="fas fa-building"></i> Facilities</a>
+<a href="{{ url_for('admin.teachers_list') }}"><i class="fas fa-chalkboard-teacher"></i> Teachers</a>
+<a href="{{ url_for('admin.testimonials_list') }}"><i class="fas fa-quote-left"></i> Testimonials</a>
+<div class="nav-section">Admissions</div>
+<a href="{{ url_for('admin.admissions_list') }}"><i class="fas fa-user-graduate"></i> Applications</a>
+<div class="nav-section">Communication</div>
+<a href="{{ url_for('admin.messages_list') }}"><i class="fas fa-envelope"></i> Messages</a>
+<div class="nav-section">Website</div>
+<a href="{{ url_for('admin.settings') }}"><i class="fas fa-cog"></i> Site Settings</a>
+<div class="nav-section">Account</div>
+<a href="{{ url_for('admin.profile') }}"><i class="fas fa-user"></i> Profile</a>
+<a href="{{ url_for('auth.logout') }}"><i class="fas fa-sign-out-alt"></i> Logout</a>
+</nav>
+</aside>
+<div class="admin-main">
+<header class="admin-topbar">
+<div style="display:flex;align-items:center;gap:12px">
+<button class="sidebar-toggle" aria-label="Toggle sidebar"><i class="fas fa-bars"></i></button>
+<h1>{% block page_title %}Dashboard{% endblock %}</h1>
+</div>
+<div class="user-info">
+<span>{{ current_admin.name if current_admin else 'Admin' }}</span>
+<a href="{{ url_for('public.index') }}" target="_blank" class="btn-admin btn-admin-sm" style="background:#F0F2F5;color:#172033"><i class="fas fa-external-link-alt"></i> View Site</a>
+</div>
+</header>
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}<div style="padding:16px 32px 0">{% for cat, msg in messages %}
+<div class="flash {{ cat }}" style="padding:12px 16px;border-radius:8px;margin-bottom:8px;background:#fff;border-left:4px solid {% if cat=='success' %}#12B76A{% elif cat=='error' %}#F04438{% else %}#2563EB{% endif %};box-shadow:0 1px 3px rgba(0,0,0,.06)">{{ msg }}</div>
+{% endfor %}</div>{% endif %}{% endwith %}
+<div class="admin-content">{% block content %}{% endblock %}</div>
+</div>
+<script src="{{ url_for('static', filename='js/admin.js') }}"></script>
+{% block scripts %}{% endblock %}
+</body></html>

@@ -1,0 +1,14 @@
+{% extends "admin/base.html" %}
+{% block title %}Gallery{% endblock %}{% block page_title %}Gallery{% endblock %}
+{% block content %}
+<div class="admin-card"><div class="card-header"><h2>Gallery Images</h2><a href="{{ url_for('admin.gallery_create') }}" class="btn-admin btn-admin-primary"><i class="fas fa-plus"></i> Add Image</a></div>
+<div class="card-body">
+<table class="admin-table"><thead><tr><th>Title</th><th>Category</th><th>Status</th><th>Date</th><th>Actions</th></tr></thead><tbody>
+{% for g in images %}<tr><td>{{ g.title }}</td><td>{{ g.category }}</td>
+<td><span class="badge badge-{{ 'success' if g.published else 'muted' }}">{{ 'Published' if g.published else 'Draft' }}</span></td>
+<td>{{ g.created_at.strftime('%d %b %Y') }}</td>
+<td><a href="{{ url_for('admin.gallery_edit', id=g.id) }}" class="btn-admin btn-admin-sm btn-admin-primary">Edit</a>
+<form method="POST" action="{{ url_for('admin.gallery_delete', id=g.id) }}" style="display:inline"><button type="submit" class="btn-admin btn-admin-sm btn-admin-danger" data-confirm="Delete this image?">Delete</button></form></td></tr>
+{% else %}<tr><td colspan="5" style="text-align:center;color:#667085">No images found</td></tr>{% endfor %}
+</tbody></table></div></div>
+{% endblock %}

@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}Academics - {{ settings.school_name }}{% endblock %}
+{% block content %}
+<div class="page-header"><div class="container"><h1>Academics</h1><div class="breadcrumb"><a href="{{ url_for('public.index') }}">Home</a> / Academics</div></div></div>
+<section class="section"><div class="container">
+<div class="section-header"><div class="section-label">Programs</div><h2>Programs for Every Stage</h2><p>Quality education from Early Childhood Development (ECD) through Grade 10.</p></div>
+<div class="programs-grid" style="grid-template-columns:repeat(3,1fr)">
+<div class="program-card"><div class="prog-img"><i class="fas fa-child"></i></div><div class="prog-body"><div class="prog-level">ECD / Pre-Primary</div><h3>Early Childhood</h3><p>Early Childhood Development (ECD), Nursery and KG with play-based learning and creative development.</p></div></div>
+<div class="program-card"><div class="prog-img"><i class="fas fa-pencil-alt"></i></div><div class="prog-body"><div class="prog-level">Grade 1 - 8</div><h3>Basic Level</h3><p>Strong academic foundation with practical learning and character development for young minds.</p></div></div>
+<div class="program-card"><div class="prog-img"><i class="fas fa-book"></i></div><div class="prog-body"><div class="prog-level">Grade 9 - 10</div><h3>Secondary Level</h3><p>Academic excellence, SEE exam preparation and guidance for secondary students up to Grade 10.</p></div></div>
+</div></div></section>
+{% endblock %}

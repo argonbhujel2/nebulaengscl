@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}Contact - {{ settings.school_name }}{% endblock %}
+{% block content %}
+<div class="page-header"><div class="container"><h1>Contact Us</h1><div class="breadcrumb"><a href="{{ url_for('public.index') }}">Home</a> / Contact</div></div></div>
+<section class="section"><div class="container">
+<div class="contact-grid">
+<div>
+<div class="contact-info-cards">
+<div class="contact-info-card"><div class="icon"><i class="fas fa-map-marker-alt"></i></div><div><h4>Address</h4><p>{{ settings.address }}</p></div></div>
+<div class="contact-info-card"><div class="icon"><i class="fas fa-phone"></i></div><div><h4>Phone</h4><p>{{ settings.phone }}</p></div></div>
+<div class="contact-info-card"><div class="icon"><i class="fas fa-envelope"></i></div><div><h4>Email</h4><p>{{ settings.email }}</p></div></div>
+<div class="contact-info-card"><div class="icon"><i class="fas fa-clock"></i></div><div><h4>Office Hours</h4><p>{{ settings.office_hours or 'Sun - Fri: 9:00 AM - 4:00 PM' }}</p></div></div>
+</div>
+{% if settings.map_embed %}
+<div class="map-embed" style="margin-top:24px;border-radius:12px;overflow:hidden;border:1px solid var(--border);min-height:280px;">
+  {{ settings.map_embed|safe }}
+</div>
+<style>.map-embed iframe{width:100%!important;height:280px!important;border:0;display:block;}</style>
+{% else %}
+<div class="map-placeholder" style="margin-top:24px;">
+  <i class="fas fa-map-marker-alt" style="margin-right:8px"></i> {{ settings.address }}
+  <p style="font-size:.85rem;margin-top:8px;opacity:.7">Add Google Maps embed in Admin → Site Settings</p>
+</div>
+{% endif %}
+</div>
+<div class="contact-form-wrap">
+<h3 style="margin-bottom:24px">Send us a Message</h3>
+<form method="POST" data-validate>
+{{ form.hidden_tag() }}
+<div class="form-row">
+<div class="form-group"><label>Name *</label>{{ form.name(placeholder='Your name') }}</div>
+<div class="form-group"><label>Email *</label>{{ form.email(placeholder='email@example.com') }}</div>
+</div>
+<div class="form-row">
+<div class="form-group"><label>Phone</label>{{ form.phone(placeholder='+977-...') }}</div>
+<div class="form-group"><label>Subject</label>{{ form.subject(placeholder='Subject') }}</div>
+</div>
+<div class="form-group"><label>Message *</label>{{ form.message(rows=5, placeholder='Your message...') }}</div>
+<button type="submit" class="btn btn-primary" style="width:100%;justify-content:center">Send Message</button>
+</form>
+</div>
+</div></div></section>
+{% endblock %}
+{% block scripts %}<script src="{{ url_for('static', filename='js/forms.js') }}"></script>{% endblock %}

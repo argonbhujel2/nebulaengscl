@@ -1,0 +1,253 @@
+{% extends "base.html" %}
+{% block title %}{{ settings.school_name }} - {{ settings.tagline }}{% endblock %}
+{% block content %}
+<!-- Hero -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-content fade-up">
+      <div class="hero-label">Welcome to {{ settings.school_name }}</div>
+      <h1>{{ settings.hero_title|replace('.', '.<br>')|safe if settings.hero_title else 'Inspiring Minds.<br><span>Building Futures.</span>' }}</h1>
+      <p>{{ settings.hero_description }}</p>
+      <div class="hero-buttons">
+        <a href="{{ url_for('public.about') }}" class="btn btn-primary">Explore Our School →</a>
+        <a href="{{ url_for('public.admissions') }}" class="btn btn-secondary">Apply for Admission</a>
+      </div>
+      <div class="hero-stats">
+        <div class="hero-stat"><div class="num" data-count="{{ settings.years }}">{{ settings.years }}</div><div class="label">Years of Excellence</div></div>
+        <div class="hero-stat"><div class="num" data-count="{{ settings.students }}">{{ settings.students }}</div><div class="label">Students</div></div>
+        <div class="hero-stat"><div class="num" data-count="{{ settings.teachers }}">{{ settings.teachers }}</div><div class="label">Teachers</div></div>
+      </div>
+    </div>
+    <div class="hero-visual">
+      {% if settings.hero_image %}
+      <img src="{{ settings.hero_image|media }}" alt="{{ settings.school_name }}" style="width:100%;height:400px;object-fit:cover;border-radius:var(--radius-lg);box-shadow:var(--shadow-xl);">
+      {% else %}
+      <div class="hero-placeholder"><i class="fas fa-graduation-cap"></i></div>
+      {% endif %}
+      <div class="floating-card card-1"><div class="num">{{ settings.years }}</div><div class="label">Years of Excellence</div></div>
+      <div class="floating-card card-2"><div class="num">{{ settings.students }}</div><div class="label">Students</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- Statistics -->
+<section class="stats-section">
+  <div class="container">
+    <div class="stats-grid fade-up">
+      <div class="stat-card"><div class="icon"><i class="fas fa-award"></i></div><div class="num" data-count="{{ settings.years }}">{{ settings.years }}</div><div class="label">Years of Excellence</div></div>
+      <div class="stat-card"><div class="icon"><i class="fas fa-user-graduate"></i></div><div class="num" data-count="{{ settings.students }}">{{ settings.students }}</div><div class="label">Students</div></div>
+      <div class="stat-card"><div class="icon"><i class="fas fa-chalkboard-teacher"></i></div><div class="num" data-count="{{ settings.teachers }}">{{ settings.teachers }}</div><div class="label">Experienced Teachers</div></div>
+      <div class="stat-card"><div class="icon"><i class="fas fa-chart-line"></i></div><div class="num" data-count="{{ settings.board_result }}">{{ settings.board_result }}</div><div class="label">Board Results</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- About -->
+<section class="section">
+  <div class="container">
+    <div class="about-grid">
+      <div class="about-image fade-up">
+        {% if settings.about_image %}
+        <img src="{{ settings.about_image|media }}" alt="{{ settings.school_name }}" style="width:100%;height:400px;object-fit:cover;border-radius:var(--radius-lg);">
+        {% else %}
+        <div class="placeholder"><i class="fas fa-school"></i></div>
+        {% endif %}
+        <div class="about-badge"><div class="num">{{ settings.students }}</div><div class="label">Students<br>Enrolled</div></div>
+      </div>
+      <div class="about-content fade-up">
+        <div class="section-label">About Our School</div>
+        <h2>A Legacy of Learning and Growth</h2>
+        <p>{{ settings.about_description }}</p>
+        <div class="mission-vision">
+          <div class="mv-card"><h4><i class="fas fa-bullseye"></i> Our Mission</h4><p>{{ settings.mission }}</p></div>
+          <div class="mv-card"><h4><i class="fas fa-eye"></i> Our Vision</h4><p>{{ settings.vision }}</p></div>
+        </div>
+        <a href="{{ url_for('public.about') }}" class="btn btn-navy">Learn More →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Why Choose Us -->
+<section class="section section-alt">
+  <div class="container">
+    <div class="section-header fade-up">
+      <div class="section-label">Why Choose Us?</div>
+      <h2>What Makes Us Different</h2>
+      <p>We provide a holistic education that builds knowledge, character and confidence.</p>
+    </div>
+    <div class="why-grid">
+      <div class="why-card fade-up"><div class="icon"><i class="fas fa-book-open"></i></div><h3>Quality Education</h3><p>Modern curriculum and student-focused learning approach.</p></div>
+      <div class="why-card fade-up"><div class="icon"><i class="fas fa-chalkboard-teacher"></i></div><h3>Experienced Teachers</h3><p>Dedicated and qualified educators committed to student success.</p></div>
+      <div class="why-card fade-up"><div class="icon"><i class="fas fa-laptop"></i></div><h3>Modern Technology</h3><p>Technology-supported teaching and digital learning tools.</p></div>
+      <div class="why-card fade-up"><div class="icon"><i class="fas fa-futbol"></i></div><h3>Sports & Activities</h3><p>Balanced development beyond academics through sports.</p></div>
+      <div class="why-card fade-up"><div class="icon"><i class="fas fa-flask"></i></div><h3>Science & Computer Labs</h3><p>Practical learning environments with modern equipment.</p></div>
+      <div class="why-card fade-up"><div class="icon"><i class="fas fa-shield-alt"></i></div><h3>Safe Environment</h3><p>A secure and supportive school community for every child.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- Academic Programs -->
+<section class="section">
+  <div class="container">
+    <div class="section-header fade-up">
+      <div class="section-label">Our Academic Programs</div>
+      <h2>Programs for Every Stage</h2>
+    </div>
+    <div class="programs-grid" style="grid-template-columns:repeat(3,1fr)">
+      <div class="program-card fade-up"><div class="prog-img"><i class="fas fa-child"></i></div><div class="prog-body"><div class="prog-level">ECD / Pre-Primary</div><h3>Early Childhood</h3><p>Play-based learning, creative development and early childhood education.</p><a href="{{ url_for('public.academics') }}" class="card-link">Learn More →</a></div></div>
+      <div class="program-card fade-up"><div class="prog-img"><i class="fas fa-pencil-alt"></i></div><div class="prog-body"><div class="prog-level">Grade 1 - 8</div><h3>Basic Level</h3><p>Strong academic foundation, practical learning and character development.</p><a href="{{ url_for('public.academics') }}" class="card-link">Learn More →</a></div></div>
+      <div class="program-card fade-up"><div class="prog-img"><i class="fas fa-book"></i></div><div class="prog-body"><div class="prog-level">Grade 9 - 10</div><h3>Secondary</h3><p>Academic excellence and SEE exam preparation up to Grade 10.</p><a href="{{ url_for('public.academics') }}" class="card-link">Learn More →</a></div></div>
+      </div>
+  </div>
+</section>
+
+<!-- Facilities -->
+{% if facilities %}
+<section class="section section-alt">
+  <div class="container">
+    <div class="section-header fade-up">
+      <div class="section-label">Our Facilities</div>
+      <h2>World-Class Facilities</h2>
+    </div>
+    <div class="facilities-grid">
+      {% for f in facilities %}
+      <div class="facility-card fade-up"{% if f.image %} style="background-image:url('{{ f.image|media }}');background-size:cover;background-position:center;"{% endif %}>
+        <div class="overlay">
+          <i class="{{ f.icon or 'fas fa-building' }}"></i>
+          <h3>{{ f.title }}</h3>
+          {% if f.description %}<p>{{ f.description[:80] }}{% if f.description|length > 80 %}...{% endif %}</p>{% endif %}
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    <div class="text-center mt-3"><a href="{{ url_for('public.facilities') }}" class="btn btn-outline">View All Facilities</a></div>
+  </div>
+</section>
+{% endif %}
+
+<!-- Principal Message -->
+<section class="section principal-section">
+  <div class="container">
+    <div class="principal-grid fade-up">
+      {% if settings.principal_image %}
+      <img src="{{ settings.principal_image|media }}" alt="{{ settings.principal_name }}" class="principal-photo" style="width:100%;aspect-ratio:1;object-fit:cover;border-radius:var(--radius);">
+      {% else %}
+      <div class="principal-photo"><i class="fas fa-user-tie"></i></div>
+      {% endif %}
+      <div class="principal-content">
+        <div class="quote-icon"><i class="fas fa-quote-left"></i></div>
+        <h2>Principal's Message</h2>
+        <blockquote>{{ settings.principal_message }}</blockquote>
+        <div class="principal-info">
+          <div><div class="name">— {{ settings.principal_name }}</div><div class="role">Principal</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Notices / News / Events -->
+<section class="section">
+  <div class="container">
+    <div class="three-col">
+      <div class="list-section fade-up">
+        <h3>Latest Notices <a href="{{ url_for('public.notices') }}">View All →</a></h3>
+        {% for n in notices %}
+        <a href="{{ url_for('public.notice_detail', slug=n.slug) }}" class="notice-item">
+          <div class="notice-date"><div class="day">{{ n.created_at.strftime('%d') }}</div><div class="month">{{ n.created_at.strftime('%b') }}</div></div>
+          <div class="notice-info"><h4>{{ n.title }}</h4><p>{{ n.content[:80] }}...</p></div>
+        </a>
+        {% else %}
+        <p>No notices at this time.</p>
+        {% endfor %}
+      </div>
+      <div class="list-section fade-up">
+        <h3>Latest News <a href="{{ url_for('public.news') }}">View All →</a></h3>
+        {% for n in news_list %}
+        <div class="notice-item">
+          <div class="notice-info">
+            <h4><a href="{{ url_for('public.news_detail', slug=n.slug) }}">{{ n.title }}</a></h4>
+            <p>{{ n.excerpt or n.content[:80] }}...</p>
+            <span style="font-size:.75rem;color:var(--light)">{{ n.published_at.strftime('%d %b %Y') if n.published_at else '' }}</span>
+          </div>
+        </div>
+        {% else %}
+        <p>No news yet.</p>
+        {% endfor %}
+      </div>
+      <div class="list-section fade-up">
+        <h3>Upcoming Events <a href="{{ url_for('public.events') }}">View All →</a></h3>
+        {% for e in events %}
+        <a href="{{ url_for('public.event_detail', event_id=e.id) }}" class="event-item">
+          <div class="event-date-box"><div class="day">{{ e.event_date.strftime('%d') }}</div><div class="month">{{ e.event_date.strftime('%b') }}</div></div>
+          <div class="event-info"><h4>{{ e.title }}</h4><div class="loc">{% if e.location %}<i class="fas fa-map-marker-alt"></i> {{ e.location }}{% endif %}</div></div>
+        </a>
+        {% else %}
+        <p>No upcoming events.</p>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Gallery Preview -->
+{% if gallery %}
+<section class="section section-alt">
+  <div class="container">
+    <div class="section-header fade-up"><div class="section-label">Gallery</div><h2>Life at Our School</h2></div>
+    <div class="gallery-grid">
+      {% for g in gallery %}
+      <div class="gallery-item fade-up" data-src="{{ url_for('static', filename=g.image) if g.image else '' }}" data-title="{{ g.title }}">
+        {% if g.image %}<img src="{{ g.image|media }}" alt="{{ g.alt_text or g.title }}" loading="lazy">{% else %}<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:2rem;color:#98A2B3"><i class="fas fa-image"></i></div>{% endif %}
+        <div class="g-overlay"><i class="fas fa-search-plus"></i></div>
+      </div>
+      {% endfor %}
+    </div>
+    <div class="text-center mt-3"><a href="{{ url_for('public.gallery') }}" class="btn btn-outline">View Full Gallery</a></div>
+  </div>
+</section>
+{% endif %}
+
+<!-- Testimonials -->
+{% if testimonials %}
+<section class="section testimonials-section">
+  <div class="container">
+    <div class="section-header fade-up"><div class="section-label">Testimonials</div><h2>What People Say</h2></div>
+    <div class="testimonial-slider fade-up">
+      <div class="testimonial-track">
+        {% for t in testimonials %}
+        <div class="testimonial-slide">
+          <div class="testimonial-card">
+            <div class="stars">{% for i in range(t.rating or 5) %}★{% endfor %}</div>
+            <div class="message">"{{ t.message }}"</div>
+            <div class="author" style="display:flex;align-items:center;justify-content:center;gap:12px;">
+              {% if t.image %}
+              <img src="{{ t.image|media }}" alt="{{ t.name }}" style="width:48px;height:48px;border-radius:50%;object-fit:cover;">
+              {% endif %}
+              <div><div class="name">{{ t.name }}</div><div class="role">{{ t.role }}</div></div>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      <div class="slider-nav">
+        <button class="slider-btn slider-prev" aria-label="Previous">‹</button>
+        <div class="slider-dots">{% for t in testimonials %}<button class="{{ 'active' if loop.first }}" aria-label="Slide {{ loop.index }}"></button>{% endfor %}</div>
+        <button class="slider-btn slider-next" aria-label="Next">›</button>
+      </div>
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="container fade-up">
+    <h2>Give Your Child the Education They Deserve</h2>
+    <p>Admissions are now open. Join a community focused on learning, growth and excellence.</p>
+    <a href="{{ url_for('public.admissions') }}" class="btn btn-primary btn-lg">Start Admission →</a>
+  </div>
+</section>
+{% endblock %}
+{% block scripts %}<script src="{{ url_for('static', filename='js/gallery.js') }}"></script>{% endblock %}

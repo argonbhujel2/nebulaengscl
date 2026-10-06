@@ -1,0 +1,20 @@
+{% extends "admin/base.html" %}
+{% block title %}Message from {{ message.name }}{% endblock %}
+{% block page_title %}Message Details{% endblock %}
+{% block content %}
+<div class="admin-card"><div class="card-header"><h2>From: {{ message.name }}</h2>
+<a href="{{ url_for('admin.messages_list') }}" class="btn-admin btn-admin-sm" style="background:#F0F2F5">← Back</a></div>
+<div class="card-body">
+<p><strong>Email:</strong> <a href="mailto:{{ message.email }}">{{ message.email }}</a></p>
+<p><strong>Phone:</strong> {{ message.phone or '—' }}</p>
+<p><strong>Subject:</strong> {{ message.subject or '—' }}</p>
+<p><strong>Date:</strong> {{ message.created_at.strftime('%d %B %Y at %H:%M') }}</p>
+<div style="margin-top:20px;padding:20px;background:#F9FAFB;border-radius:8px">
+<strong>Message:</strong>
+<p style="margin-top:8px;white-space:pre-wrap">{{ message.message }}</p>
+</div>
+<form method="POST" action="{{ url_for('admin.messages_delete', id=message.id) }}" style="margin-top:20px">
+<button type="submit" class="btn-admin btn-admin-danger" data-confirm="Delete this message?">Delete Message</button>
+</form>
+</div></div>
+{% endblock %}

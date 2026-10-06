@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Notices - {{ settings.school_name }}{% endblock %}
+{% block content %}
+<div class="page-header"><div class="container"><h1>Notices</h1><div class="breadcrumb"><a href="{{ url_for('public.index') }}">Home</a> / Notices</div></div></div>
+<section class="section"><div class="container" style="max-width:800px">
+{% for n in notices %}
+<a href="{{ url_for('public.notice_detail', slug=n.slug) }}" class="notice-item" style="padding:20px;border:1px solid var(--border-l);border-radius:var(--radius);margin-bottom:12px;display:flex">
+<div class="notice-date"><div class="day">{{ n.created_at.strftime('%d') }}</div><div class="month">{{ n.created_at.strftime('%b') }}</div></div>
+<div class="notice-info"><h4>{{ n.title }}</h4><p>{{ n.content[:120] }}...</p><span style="font-size:.75rem;color:var(--blue)">{{ n.category }}</span></div>
+</a>
+{% else %}<p class="text-center">No notices available.</p>{% endfor %}
+{% if pagination and pagination.pages > 1 %}
+<div class="pagination">{% if pagination.has_prev %}<a href="?page={{ pagination.prev_num }}">‹</a>{% endif %}
+{% for p in pagination.iter_pages() %}{% if p %}<a href="?page={{ p }}" class="{{ 'active' if p == pagination.page }}">{{ p }}</a>{% endif %}{% endfor %}
+{% if pagination.has_next %}<a href="?page={{ pagination.next_num }}">›</a>{% endif %}</div>{% endif %}
+</div></section>
+{% endblock %}

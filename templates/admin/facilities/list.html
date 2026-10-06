@@ -1,0 +1,12 @@
+{% extends "admin/base.html" %}
+{% block title %}Facilities{% endblock %}{% block page_title %}Facilities{% endblock %}
+{% block content %}
+<div class="admin-card"><div class="card-header"><h2>Facilities</h2><a href="{{ url_for('admin.facilities_create') }}" class="btn-admin btn-admin-primary"><i class="fas fa-plus"></i> Add</a></div>
+<div class="card-body"><table class="admin-table"><thead><tr><th>Title</th><th>Icon</th><th>Status</th><th>Actions</th></tr></thead><tbody>
+{% for f in facilities %}<tr><td>{{ f.title }}</td><td>{{ f.icon }}</td>
+<td><span class="badge badge-{{ 'success' if f.published else 'muted' }}">{{ 'Published' if f.published else 'Draft' }}</span></td>
+<td><a href="{{ url_for('admin.facilities_edit', id=f.id) }}" class="btn-admin btn-admin-sm btn-admin-primary">Edit</a>
+<form method="POST" action="{{ url_for('admin.facilities_delete', id=f.id) }}" style="display:inline"><button type="submit" class="btn-admin btn-admin-sm btn-admin-danger" data-confirm="Delete?">Delete</button></form></td></tr>
+{% else %}<tr><td colspan="4" style="text-align:center;color:#667085">No facilities</td></tr>{% endfor %}
+</tbody></table></div></div>
+{% endblock %}

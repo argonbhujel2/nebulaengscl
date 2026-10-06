@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Facilities - {{ settings.school_name }}{% endblock %}
+{% block content %}
+<div class="page-header"><div class="container"><h1>Facilities</h1><div class="breadcrumb"><a href="{{ url_for('public.index') }}">Home</a> / Facilities</div></div></div>
+<section class="section"><div class="container">
+<div class="section-header"><h2>World-Class Facilities</h2><p>Everything your child needs for a complete learning experience.</p></div>
+<div class="facilities-grid">
+{% for f in facilities %}
+<div class="facility-card"{% if f.image %} style="background-image:url('{{ f.image|media }}');background-size:cover;background-position:center;"{% endif %}><div class="overlay"><i class="{{ f.icon or 'fas fa-building' }}"></i><h3>{{ f.title }}</h3>{% if f.description %}<p>{{ f.description }}</p>{% endif %}</div></div>
+{% else %}
+<p class="text-center">Facilities information coming soon.</p>
+{% endfor %}
+</div></div></section>
+{% endblock %}

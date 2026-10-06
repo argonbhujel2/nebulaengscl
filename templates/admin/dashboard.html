@@ -1,0 +1,26 @@
+{% extends "admin/base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block page_title %}Dashboard{% endblock %}
+{% block content %}
+<div class="stats-row">
+<div class="stat-box"><div class="label">Admission Applications</div><div class="value gold">{{ stats.admissions }}</div><div style="font-size:.8rem;color:#667085;margin-top:4px">{{ stats.pending_admissions }} pending</div></div>
+<div class="stat-box"><div class="label">Published News</div><div class="value blue">{{ stats.news }}</div></div>
+<div class="stat-box"><div class="label">Upcoming Events</div><div class="value">{{ stats.events }}</div></div>
+<div class="stat-box"><div class="label">Gallery Images</div><div class="value">{{ stats.gallery }}</div></div>
+<div class="stat-box"><div class="label">Unread Messages</div><div class="value" style="color:{% if stats.messages %}#F04438{% else %}#12B76A{% endif %}">{{ stats.messages }}</div></div>
+<div class="stat-box"><div class="label">Teachers</div><div class="value">{{ stats.teachers }}</div></div>
+</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:24px">
+<div class="admin-card"><div class="card-header"><h2>Recent Applications</h2><a href="{{ url_for('admin.admissions_list') }}" class="btn-admin btn-admin-sm btn-admin-primary">View All</a></div>
+<div class="card-body"><table class="admin-table"><thead><tr><th>ID</th><th>Student</th><th>Grade</th><th>Status</th></tr></thead><tbody>
+{% for a in recent_admissions %}<tr><td>{{ a.application_id }}</td><td>{{ a.student_name }}</td><td>{{ a.grade }}</td>
+<td><span class="badge badge-{% if a.status=='Approved' %}success{% elif a.status=='Rejected' %}error{% elif a.status=='Reviewed' %}info{% else %}warning{% endif %}">{{ a.status }}</span></td></tr>
+{% else %}<tr><td colspan="4" style="text-align:center;color:#667085">No applications yet</td></tr>{% endfor %}
+</tbody></table></div></div>
+<div class="admin-card"><div class="card-header"><h2>Recent Messages</h2><a href="{{ url_for('admin.messages_list') }}" class="btn-admin btn-admin-sm btn-admin-primary">View All</a></div>
+<div class="card-body"><table class="admin-table"><thead><tr><th>Name</th><th>Subject</th><th>Date</th></tr></thead><tbody>
+{% for m in recent_messages %}<tr><td>{{ m.name }}{% if not m.is_read %} <span class="badge badge-error">New</span>{% endif %}</td><td>{{ m.subject or '—' }}</td><td>{{ m.created_at.strftime('%d %b') }}</td></tr>
+{% else %}<tr><td colspan="3" style="text-align:center;color:#667085">No messages</td></tr>{% endfor %}
+</tbody></table></div></div>
+</div>
+{% endblock %}

@@ -1,0 +1,12 @@
+{% extends "admin/base.html" %}
+{% block title %}Testimonials{% endblock %}{% block page_title %}Testimonials{% endblock %}
+{% block content %}
+<div class="admin-card"><div class="card-header"><h2>Testimonials</h2><a href="{{ url_for('admin.testimonials_create') }}" class="btn-admin btn-admin-primary"><i class="fas fa-plus"></i> Add</a></div>
+<div class="card-body"><table class="admin-table"><thead><tr><th>Name</th><th>Role</th><th>Rating</th><th>Status</th><th>Actions</th></tr></thead><tbody>
+{% for t in testimonials %}<tr><td>{{ t.name }}</td><td>{{ t.role or '—' }}</td><td>{{ t.rating }}/5</td>
+<td><span class="badge badge-{{ 'success' if t.published else 'muted' }}">{{ 'Published' if t.published else 'Draft' }}</span></td>
+<td><a href="{{ url_for('admin.testimonials_edit', id=t.id) }}" class="btn-admin btn-admin-sm btn-admin-primary">Edit</a>
+<form method="POST" action="{{ url_for('admin.testimonials_delete', id=t.id) }}" style="display:inline"><button type="submit" class="btn-admin btn-admin-sm btn-admin-danger" data-confirm="Delete?">Delete</button></form></td></tr>
+{% else %}<tr><td colspan="5" style="text-align:center;color:#667085">No testimonials</td></tr>{% endfor %}
+</tbody></table></div></div>
+{% endblock %}

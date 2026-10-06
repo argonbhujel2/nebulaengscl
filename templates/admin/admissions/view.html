@@ -1,0 +1,38 @@
+{% extends "admin/base.html" %}
+{% block title %}Application {{ admission.application_id }}{% endblock %}
+{% block page_title %}Application Details{% endblock %}
+{% block content %}
+<div class="admin-card"><div class="card-header"><h2>{{ admission.application_id }}</h2>
+<a href="{{ url_for('admin.admissions_list') }}" class="btn-admin btn-admin-sm" style="background:#F0F2F5">← Back</a></div>
+<div class="card-body">
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:24px">
+<div>
+<p><strong>Student Name:</strong> {{ admission.student_name }}</p>
+<p><strong>Date of Birth:</strong> {{ admission.date_of_birth or '—' }}</p>
+<p><strong>Gender:</strong> {{ admission.gender or '—' }}</p>
+<p><strong>Grade:</strong> {{ admission.grade }}</p>
+<p><strong>Previous School:</strong> {{ admission.previous_school or '—' }}</p>
+</div>
+<div>
+<p><strong>Guardian:</strong> {{ admission.guardian_name }}</p>
+<p><strong>Phone:</strong> {{ admission.phone }}</p>
+<p><strong>Email:</strong> {{ admission.email or '—' }}</p>
+<p><strong>Address:</strong> {{ admission.address or '—' }}</p>
+<p><strong>Submitted:</strong> {{ admission.created_at.strftime('%d %b %Y %H:%M') }}</p>
+</div>
+</div>
+{% if admission.message %}<div style="margin-top:20px"><strong>Message:</strong><p>{{ admission.message }}</p></div>{% endif %}
+<div style="margin-top:24px;padding-top:20px;border-top:1px solid #E4E7EC">
+<strong>Update Status:</strong>
+<form method="POST" action="{{ url_for('admin.admissions_status', id=admission.id) }}" style="display:flex;gap:12px;margin-top:12px;align-items:center">
+<select name="status" style="padding:8px 12px;border:1px solid #E4E7EC;border-radius:8px">
+{% for s in ['Pending','Reviewed','Approved','Rejected'] %}<option value="{{ s }}" {{ 'selected' if admission.status==s }}>{{ s }}</option>{% endfor %}
+</select>
+<button type="submit" class="btn-admin btn-admin-primary">Update Status</button>
+</form>
+<form method="POST" action="{{ url_for('admin.admissions_delete', id=admission.id) }}" style="margin-top:16px">
+<button type="submit" class="btn-admin btn-admin-danger" data-confirm="Delete this application permanently?">Delete Application</button>
+</form>
+</div>
+</div></div>
+{% endblock %}

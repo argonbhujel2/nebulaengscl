@@ -1,0 +1,29 @@
+{% extends "admin/base.html" %}
+{% block title %}{{ title }}{% endblock %}
+{% block page_title %}{{ title }}{% endblock %}
+{% block content %}
+<div class="admin-card">
+  <div class="card-header">
+    <h2>{{ title }}</h2>
+    <a href="{{ url_for('admin.testimonials_list') }}" class="btn-admin btn-admin-sm" style="background:#F0F2F5">← Back</a>
+  </div>
+  <div class="card-body">
+    <form method="POST" enctype="multipart/form-data" class="admin-form">
+      {{ form.hidden_tag() }}
+      <div class="form-group"><label>Name *</label>{{ form.name() }}</div>
+      <div class="form-group"><label>Role</label>{{ form.role(placeholder='e.g. Parent of Grade 8 Student') }}</div>
+      <div class="form-group"><label>Message *</label>{{ form.message(rows=5) }}</div>
+      <div class="form-group"><label>Rating (1-5)</label>{{ form.rating() }}</div>
+      <div class="form-group">
+        <label>Photo</label>{{ form.image() }}
+        {% if item and item.image %}
+        <p style="font-size:.8rem;color:#667085;margin-top:6px">Current:</p>
+        <img src="{{ item.image|media }}" alt="" style="max-width:100px;border-radius:50%;margin-top:4px;aspect-ratio:1;object-fit:cover;">
+        {% endif %}
+      </div>
+      <div class="form-group checkbox-group">{{ form.published() }} <label>Published</label></div>
+      <button type="submit" class="btn-admin btn-admin-primary">Save Testimonial</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

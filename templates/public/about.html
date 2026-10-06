@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}About Us - {{ settings.school_name }}{% endblock %}
+{% block content %}
+<div class="page-header"><div class="container"><h1>About Us</h1><div class="breadcrumb"><a href="{{ url_for('public.index') }}">Home</a> / About</div></div></div>
+<section class="section"><div class="container"><div class="about-grid">
+<div class="about-image">{% if settings.about_image %}<img src="{{ settings.about_image|media }}" alt="{{ settings.school_name }}" style="width:100%;height:400px;object-fit:cover;border-radius:var(--radius-lg);">{% else %}<div class="placeholder"><i class="fas fa-school"></i></div>{% endif %}</div>
+<div class="about-content"><div class="section-label">Our Story</div><h2>{{ settings.school_name }}</h2>
+<p>{{ settings.about_description }}</p>
+<div class="mission-vision">
+<div class="mv-card"><h4><i class="fas fa-bullseye"></i> Mission</h4><p>{{ settings.mission }}</p></div>
+<div class="mv-card"><h4><i class="fas fa-eye"></i> Vision</h4><p>{{ settings.vision }}</p></div>
+</div></div></div>
+{% if teachers %}<div class="section-header mt-3" style="margin-top:64px"><h2>Our Leadership</h2></div>
+<div class="programs-grid">{% for t in teachers %}
+<div class="program-card">
+<div class="prog-img" style="padding:0;overflow:hidden;">
+{% if t.image %}<img src="{{ t.image|media }}" alt="{{ t.name }}" style="width:100%;height:100%;object-fit:cover;">{% else %}<i class="fas fa-user-tie"></i>{% endif %}
+</div>
+<div class="prog-body"><h3>{{ t.name }}</h3><div class="prog-level">{{ t.designation }}</div>
+{% if t.qualification %}<p>{{ t.qualification }}</p>{% endif %}
+{% if t.bio %}<p>{{ t.bio }}</p>{% endif %}</div></div>
+{% endfor %}</div>{% endif %}
+</div></section>
+{% endblock %}

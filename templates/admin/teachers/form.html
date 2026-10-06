@@ -1,0 +1,17 @@
+{% extends "admin/base.html" %}
+{% block title %}{{ title }}{% endblock %}{% block page_title %}{{ title }}{% endblock %}
+{% block content %}
+<div class="admin-card"><div class="card-header"><h2>{{ title }}</h2><a href="{{ url_for('admin.teachers_list') }}" class="btn-admin btn-admin-sm" style="background:#F0F2F5">← Back</a></div>
+<div class="card-body"><form method="POST" enctype="multipart/form-data" class="admin-form">{{ form.hidden_tag() }}
+<div class="form-group"><label>Name *</label>{{ form.name() }}</div>
+<div class="form-group"><label>Designation</label>{{ form.designation() }}</div>
+<div class="form-group"><label>Qualification</label>{{ form.qualification() }}</div>
+<div class="form-group"><label>Subject</label>{{ form.subject() }}</div>
+<div class="form-group"><label>Bio</label>{{ form.bio(rows=4) }}</div>
+<div class="form-group"><label>Image</label>{{ form.image() }}
+{% if item and item.image %}<p style="font-size:.8rem;color:#667085;margin-top:6px">Current:</p>
+<img src="{{ item.image|media }}" alt="" style="max-width:120px;border-radius:8px;margin-top:4px">{% endif %}</div>
+<div class="form-group checkbox-group">{{ form.published() }} <label>Published</label></div>
+<button type="submit" class="btn-admin btn-admin-primary">Save</button>
+</form></div></div>
+{% endblock %}

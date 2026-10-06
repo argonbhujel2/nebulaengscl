@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}News - {{ settings.school_name }}{% endblock %}
+{% block content %}
+<div class="page-header"><div class="container"><h1>News & Updates</h1><div class="breadcrumb"><a href="{{ url_for('public.index') }}">Home</a> / News</div></div></div>
+<section class="section"><div class="container">
+<div class="news-grid">
+{% for n in news_list %}
+<div class="card news-card">
+<div class="card-img-wrap">{% if n.image %}<img src="{{ url_for('static', filename=n.image) }}" alt="{{ n.title }}" loading="lazy">{% else %}<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:2.5rem;color:#98A2B3"><i class="fas fa-newspaper"></i></div>{% endif %}</div>
+<div class="card-body">
+<div class="meta">{{ n.category }} · {{ n.published_at.strftime('%d %b %Y') if n.published_at else '' }}</div>
+<h3>{{ n.title }}</h3>
+<p>{{ n.excerpt or n.content[:120] }}...</p>
+<a href="{{ url_for('public.news_detail', slug=n.slug) }}" class="card-link">Read More →</a>
+</div></div>
+{% else %}<p class="text-center">No news articles yet.</p>{% endfor %}
+</div>
+{% if pagination and pagination.pages > 1 %}
+<div class="pagination">
+{% if pagination.has_prev %}<a href="{{ url_for('public.news', page=pagination.prev_num) }}">‹</a>{% endif %}
+{% for p in pagination.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=2) %}
+{% if p %}<a href="{{ url_for('public.news', page=p) }}" class="{{ 'active' if p == pagination.page }}">{{ p }}</a>{% else %}<span>…</span>{% endif %}
+{% endfor %}
+{% if pagination.has_next %}<a href="{{ url_for('public.news', page=pagination.next_num) }}">›</a>{% endif %}
+</div>{% endif %}
+</div></section>
+{% endblock %}

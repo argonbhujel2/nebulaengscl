@@ -1,0 +1,15 @@
+{% extends "admin/base.html" %}
+{% block title %}News{% endblock %}{% block page_title %}News{% endblock %}
+{% block content %}
+<div class="admin-card"><div class="card-header"><h2>All News</h2><a href="{{ url_for('admin.news_create') }}" class="btn-admin btn-admin-primary"><i class="fas fa-plus"></i> Create</a></div>
+<div class="card-body">
+<form class="search-bar" method="GET"><input type="text" name="q" value="{{ q }}" placeholder="Search news..."><button type="submit" class="btn-admin btn-admin-primary">Search</button></form>
+<table class="admin-table"><thead><tr><th>Title</th><th>Category</th><th>Status</th><th>Date</th><th>Actions</th></tr></thead><tbody>
+{% for n in news_list %}<tr><td>{{ n.title }}</td><td>{{ n.category }}</td>
+<td><span class="badge badge-{{ 'success' if n.published else 'muted' }}">{{ 'Published' if n.published else 'Draft' }}</span></td>
+<td>{{ n.created_at.strftime('%d %b %Y') }}</td>
+<td><a href="{{ url_for('admin.news_edit', id=n.id) }}" class="btn-admin btn-admin-sm btn-admin-primary">Edit</a>
+<form method="POST" action="{{ url_for('admin.news_delete', id=n.id) }}" style="display:inline"><button type="submit" class="btn-admin btn-admin-sm btn-admin-danger" data-confirm="Delete this news?">Delete</button></form></td></tr>
+{% else %}<tr><td colspan="5" style="text-align:center;color:#667085">No news found</td></tr>{% endfor %}
+</tbody></table></div></div>
+{% endblock %}

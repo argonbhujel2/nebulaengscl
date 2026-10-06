@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Login - Shree Nebula English School</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+<div class="login-page">
+<div class="login-box">
+<h1>Admin Login</h1>
+<p class="subtitle">Shree Nebula English School</p>
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% for cat, msg in messages %}<div style="padding:10px 14px;border-radius:8px;margin-bottom:16px;background:{% if cat=='error' %}#FEF3F2{% else %}#ECFDF3{% endif %};color:{% if cat=='error' %}#B42318{% else %}#027A48{% endif %};font-size:.9rem">{{ msg }}</div>{% endfor %}
+{% endwith %}
+<form method="POST">
+{{ form.hidden_tag() }}
+<div class="form-group"><label>Email</label>{{ form.email(placeholder='admin@school.edu.np') }}</div>
+<div class="form-group"><label>Password</label>{{ form.password(placeholder='••••••••') }}</div>
+<button type="submit" class="btn btn-primary">Sign In</button>
+</form>
+</div></div>
+</body></html>

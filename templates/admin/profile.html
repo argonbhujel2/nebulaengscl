@@ -1,0 +1,18 @@
+{% extends "admin/base.html" %}
+{% block title %}Profile{% endblock %}
+{% block page_title %}My Profile{% endblock %}
+{% block content %}
+<div class="admin-card">
+  <div class="card-header"><h2>Profile Information</h2></div>
+  <div class="card-body">
+    {% if admin %}
+    <p><strong>Name:</strong> {{ admin.name }}</p>
+    <p><strong>Email:</strong> {{ admin.email }}</p>
+    <p><strong>Role:</strong> {{ admin.role }}</p>
+    <p><strong>Member Since:</strong> {{ admin.created_at.strftime('%d %B %Y') if admin.created_at else '—' }}</p>
+    {% else %}
+    <p>Admin session not found. Please <a href="{{ url_for('auth.login') }}">log in again</a>.</p>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

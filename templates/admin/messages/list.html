@@ -1,0 +1,13 @@
+{% extends "admin/base.html" %}
+{% block title %}Messages{% endblock %}{% block page_title %}Contact Messages{% endblock %}
+{% block content %}
+<div class="admin-card"><div class="card-header"><h2>Messages</h2></div>
+<div class="card-body"><table class="admin-table"><thead><tr><th>Name</th><th>Email</th><th>Subject</th><th>Date</th><th>Status</th><th>Actions</th></tr></thead><tbody>
+{% for m in messages %}<tr>
+<td>{{ m.name }}</td><td>{{ m.email }}</td><td>{{ m.subject or '—' }}</td><td>{{ m.created_at.strftime('%d %b %Y') }}</td>
+<td>{% if not m.is_read %}<span class="badge badge-error">Unread</span>{% else %}<span class="badge badge-muted">Read</span>{% endif %}</td>
+<td><a href="{{ url_for('admin.messages_view', id=m.id) }}" class="btn-admin btn-admin-sm btn-admin-primary">View</a>
+<form method="POST" action="{{ url_for('admin.messages_delete', id=m.id) }}" style="display:inline"><button type="submit" class="btn-admin btn-admin-sm btn-admin-danger" data-confirm="Delete?">Delete</button></form></td>
+</tr>{% else %}<tr><td colspan="6" style="text-align:center;color:#667085">No messages</td></tr>{% endfor %}
+</tbody></table></div></div>
+{% endblock %}
