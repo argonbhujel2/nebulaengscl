@@ -34,19 +34,6 @@ def get_settings():
         )
 
 
-@public_bp.context_processor
-def inject_globals():
-    try:
-        settings = get_settings()
-    except Exception:
-        settings = SiteSettings(
-            school_name='Shree Nebula English School',
-            tagline='Inspiring Minds. Building Futures.',
-        )
-    return {
-        'settings': settings,
-        'current_year': datetime.utcnow().year,
-    }
 
 
 @public_bp.route('/')

@@ -6,16 +6,12 @@ load_dotenv()
 
 def get_database_url():
     url = os.environ.get('DATABASE_URL') or 'sqlite:///school.db'
-    # Heroku/Neon sometimes use postgres:// which SQLAlchemy 2 needs as postgresql://
     if url.startswith('postgres://'):
         url = url.replace('postgres://', 'postgresql://', 1)
-    # Force psycopg2 driver (package: psycopg2-binary). Neon/Vercel Postgres
-    # URLs sometimes use postgresql+psycopg:// which expects the psycopg v3 package.
     if url.startswith('postgresql+psycopg://'):
         url = url.replace('postgresql+psycopg://', 'postgresql+psycopg2://', 1)
     elif url.startswith('postgresql://'):
         url = url.replace('postgresql://', 'postgresql+psycopg2://', 1)
-    # Neon / many cloud Postgres require SSL
     if url.startswith('postgresql') and 'sslmode=' not in url:
         sep = '&' if '?' in url else '?'
         url = f'{url}{sep}sslmode=require'

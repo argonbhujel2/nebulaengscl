@@ -1,7 +1,8 @@
 import sys
 import os
+from datetime import datetime
+from types import SimpleNamespace
 
-# Ensure project root is on sys.path (fixes some Windows/custom Python installs)
 _ROOT = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, _ROOT)
 
@@ -11,15 +12,31 @@ from models import init_db, db
 from routes import register_blueprints
 
 
+def _fallback_settings():
+    return SimpleNamespace(
+        school_name='Shree Nebula English School',
+        tagline='Inspiring Minds. Building Futures.',
+        logo=None, favicon=None, phone='+977 984-2055059',
+        email='nebula2053@gmail.com',
+        address='Urlabari-8, Rajghat, Morang, Koshi Province, Nepal',
+        facebook_url='', instagram_url='', youtube_url='',
+        announcement='', footer_text='© 2026 Shree Nebula English School. All Rights Reserved.',
+        years='25+', students='605+', teachers='40+', board_result='90%+',
+        office_hours='Sun - Fri: 9:00 AM - 4:00 PM',
+        hero_title='Inspiring Minds. Building Futures.',
+        hero_description='', hero_image=None, about_image=None,
+        principal_name='Principal', principal_message='', principal_image=None,
+        about_description='', mission='', vision='', map_embed='',
+    )
+
+
 def _bootstrap_defaults(app):
-    """Create tables, default site settings, and default admin if missing."""
     with app.app_context():
         try:
             db.create_all()
         except Exception as e:
             print(f'db.create_all warning: {e}')
 
-        # Add missing columns when possible (best-effort)
         try:
             from sqlalchemy import text, inspect
             insp = inspect(db.engine)
@@ -49,7 +66,6 @@ def _bootstrap_defaults(app):
         except Exception as e:
             print(f'schema migrate warning: {e}')
 
-        # Default site settings row
         try:
             from models.settings import SiteSettings
             if not SiteSettings.query.first():
@@ -63,7 +79,6 @@ def _bootstrap_defaults(app):
             except Exception:
                 pass
 
-        # Default admin: admin@nebula / admin123
         try:
             from models.admin import AdminUser
             email = 'admin@nebula'
@@ -74,13 +89,11 @@ def _bootstrap_defaults(app):
                 db.session.add(admin)
                 db.session.commit()
                 print('Created default admin admin@nebula / admin123')
-            else:
-                # Ensure known password on fresh deploys if env forces reset
-                if os.environ.get('RESET_ADMIN_PASSWORD') == '1':
-                    existing.set_password('admin123')
-                    existing.is_active = True
-                    db.session.commit()
-                    print('Reset admin password to admin123')
+            elif os.environ.get('RESET_ADMIN_PASSWORD') == '1':
+                existing.set_password('admin123')
+                existing.is_active = True
+                db.session.commit()
+                print('Reset admin password to admin123')
         except Exception as e:
             print(f'admin bootstrap warning: {e}')
             try:
@@ -90,7 +103,6 @@ def _bootstrap_defaults(app):
 
 
 def create_app(config_class=Config):
-    # Explicit absolute paths — required for reliable templates/static on Vercel
     app = Flask(
         __name__,
         template_folder=os.path.join(_ROOT, 'templates'),
@@ -99,12 +111,9 @@ def create_app(config_class=Config):
     )
     app.config.from_object(config_class)
 
-    # On Vercel / serverless the deploy package is read-only.
-    # Use /tmp for local uploads (ephemeral) or rely on Cloudinary.
     if os.environ.get('VERCEL') or os.environ.get('AWS_LAMBDA_FUNCTION_NAME'):
         app.config['UPLOAD_FOLDER'] = os.path.join('/tmp', 'uploads')
 
-    # Ensure upload folder exists — ignore read-only filesystem errors
     try:
         os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
     except OSError:
@@ -115,12 +124,31 @@ def create_app(config_class=Config):
 
     @app.template_filter('media')
     def media_filter(path):
-        """Jinja filter: {{ path|media }} works for local and Cloudinary URLs."""
         from utils.helpers import media_url
         try:
             return media_url(path)
         except Exception:
             return path or ''
+
+    @app.context_processor
+    def inject_globals():
+        try:
+            from models.settings import SiteSettings
+            try:
+                settings = SiteSettings.get_settings()
+            except Exception as e:
+                print(f'get_settings error: {e}')
+                try:
+                    db.session.rollback()
+                except Exception:
+                    pass
+                settings = _fallback_settings()
+        except Exception:
+            settings = _fallback_settings()
+        return {
+            'settings': settings,
+            'current_year': datetime.utcnow().year,
+        }
 
     _bootstrap_defaults(app)
 
